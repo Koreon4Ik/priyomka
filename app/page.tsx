@@ -117,7 +117,7 @@ export default function HomePage() {
       <section className="py-20 relative z-20">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12">
           {[
-            { title: "Software", desc: "Розробка сучасного прогрманого забезбечення", icon: Icons.Binary },
+            { title: "Software", desc: "Розробка сучасного програмного забезбечення", icon: Icons.Binary },
             { title: "Hardware", desc: "Мікроелектроніка та робототехніка", icon: Icons.CircuitBoard },
             { title: "Cyber", desc: "Захист даних та мереж", icon: Icons.Lock }
           ].map((card, i) => (
