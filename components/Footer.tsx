@@ -47,11 +47,11 @@ export default function Footer() {
             <ul className="space-y-4 text-left">
               <li className="flex items-start gap-3 text-sm text-gray-500">
                 <MapPin size={18} className="text-blue-600 shrink-0" />
-                <span>вулиця Шмідта, 18, Дніпро, Дніпропетровська область, 49000</span>
+                <span>вулиця Степана Бандери, 18, Дніпро, Дніпропетровська область, 49000</span>
               </li>
               <li className="flex items-center gap-3 text-sm text-gray-500">
                 <Phone size={18} className="text-blue-600 shrink-0" />
-                <span>+38 (067) 123-45-67</span>
+                <span>+38 097 501 92 77</span>
               </li>
               <li className="flex items-center gap-3 text-sm text-gray-500">
                 <Mail size={18} className="text-blue-600 shrink-0" />
@@ -70,7 +70,7 @@ export default function Footer() {
               <a href="https://www.instagram.com/kre.dnipro/" className="p-3 bg-gray-50 rounded-xl text-gray-400 hover:text-pink-600 hover:bg-pink-50 transition-all">
                 <Instagram size={20} />
               </a>
-              <a href="https://t.me/pk_vstup_KRE" className="p-3 bg-gray-50 rounded-xl text-gray-400 hover:text-sky-500 hover:bg-sky-50 transition-all">
+              <a href="https://t.me/pk_DFKR" className="p-3 bg-gray-50 rounded-xl text-gray-400 hover:text-sky-500 hover:bg-sky-50 transition-all">
                 <Send size={20} />
               </a>
             </div>
