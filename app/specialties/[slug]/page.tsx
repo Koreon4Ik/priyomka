@@ -1,3 +1,6 @@
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 import { client } from '@/sanity/lib/client'
 import * as Icons from 'lucide-react'
 import { notFound } from 'next/navigation'
