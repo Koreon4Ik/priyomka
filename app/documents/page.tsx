@@ -17,8 +17,6 @@ async function getDocumentsPage() {
   return await client.fetch(query)
 }
 
-export const dynamic = 'force-dynamic'
-export const revalidate = 0
 
 export default async function DocumentsPage() {
   const data = await getDocumentsPage()

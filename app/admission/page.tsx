@@ -15,8 +15,6 @@ interface AdmissionStep {
   fileUrl?: string
 }
 
-export const dynamic = 'force-dynamic'
-export const revalidate = 0
 
 
 export default function AdmissionPage() {
