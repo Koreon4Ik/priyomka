@@ -3,8 +3,6 @@ import { structureTool } from 'sanity/structure'
 import { visionTool } from '@sanity/vision' // <-- Тут не має бути крапки з косою рискою
 import { schema } from './schemaTypes'     // <-- Тут залишаємо одну крапку
 
-export const dynamic = 'force-dynamic'
-export const revalidate = 0
 
 export default defineConfig({
   name: 'default',

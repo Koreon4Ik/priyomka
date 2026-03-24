@@ -1,8 +1,7 @@
 import {TagIcon} from '@sanity/icons'
 import {defineField, defineType} from 'sanity'
 
-export const dynamic = 'force-dynamic'
-export const revalidate = 0
+
 
 export const categoryType = defineType({
   name: 'category',
