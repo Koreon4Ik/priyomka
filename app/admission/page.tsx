@@ -15,6 +15,10 @@ interface AdmissionStep {
   fileUrl?: string
 }
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
+
 export default function AdmissionPage() {
   const [steps, setSteps] = useState<AdmissionStep[]>([])
   const [selectedStep, setSelectedStep] = useState<AdmissionStep | null>(null)
