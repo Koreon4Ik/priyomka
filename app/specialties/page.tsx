@@ -1,3 +1,6 @@
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 import { client } from '@/sanity/lib/client'
 import * as Icons from 'lucide-react'
 import Link from 'next/link'
@@ -12,7 +15,8 @@ async function getSpecialties() {
     shortDescription,
     icon
   }`
-  return await client.fetch(query)
+  // Додаємо { next: { revalidate: 0 } } для відключення кешу запиту
+  return await client.fetch(query, {}, { next: { revalidate: 0 } })
 }
 
 export default async function SpecialtiesPage() {

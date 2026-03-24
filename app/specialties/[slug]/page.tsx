@@ -18,7 +18,9 @@ async function getSpecialtyData(slug: string) {
     content,
     benefits
   }`
-  return await client.fetch(query, { slug })
+  
+  // Додаємо параметр { next: { revalidate: 0 } } прямо в запит
+  return await client.fetch(query, { slug }, { next: { revalidate: 0 } })
 }
 
 export default async function SpecialtyDetailsPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -49,11 +51,11 @@ export default async function SpecialtyDetailsPage({ params }: { params: Promise
           </div>
           
           <div>
-            {/* Основний заголовок (G-5) */}
+            {/* Основний заголовок */}
             <h1 className="text-5xl md:text-7xl font-black text-gray-900 leading-[0.9] mb-4">
               {item.title}
             </h1>
-            {/* Підзаголовок (Електронні комунікації...) */}
+            {/* Підзаголовок */}
             {item.subtitle && (
               <p className="text-xl md:text-3xl font-medium text-blue-600 tracking-tight">
                 {item.subtitle}
