@@ -11,3 +11,6 @@ export default defineType({
     defineField({ name: 'avatar', title: 'Фото студента', type: 'image', options: { hotspot: true } }),
   ],
 })
+
+export const dynamic = 'force-dynamic'
+export const revalidate = 0

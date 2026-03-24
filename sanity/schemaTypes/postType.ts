@@ -1,6 +1,9 @@
 import {DocumentTextIcon} from '@sanity/icons'
 import {defineArrayMember, defineField, defineType} from 'sanity'
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export const postType = defineType({
   name: 'post',
   title: 'Post',
