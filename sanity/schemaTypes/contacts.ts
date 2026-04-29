@@ -1,4 +1,4 @@
-import { defineField, defineType } from 'sanity'
+Іimport { defineField, defineType } from 'sanity'
 
 
 

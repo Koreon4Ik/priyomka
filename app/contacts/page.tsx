@@ -1,35 +1,25 @@
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 import PageHeader from '../../components/PageHeader'
 import { MapPin, Phone, Mail, Clock } from 'lucide-react'
-import { client } from '../../sanity/lib/client'
-
-// Вказуємо Next.js оновлювати кеш сторінки кожні 60 секунд
-export const revalidate = 60;
+import { client } from '@/sanity/lib/client'
 
 export default async function ContactsPage() {
-  // Отримуємо дані з Sanity (документ типу "contacts")
-  const sanityData = await client.fetch(`*[_type == "contacts"][0]`);
+  // Робимо запит до Sanity за даними (тип "contacts")
+  const query = `*[_type == "contacts"][0]{ address, phone, email }`;
+  const sanityData = await client.fetch(query, {}, { next: { revalidate: 0 } });
+
+  // Якщо даних в Sanity ще немає, покажемо ці стандартні (щоб сайт не впав)
+  const address = sanityData?.address || "м.Дніпро, вул. Степана Бандери, 18";
+  const phone = sanityData?.phone || "+38 (067) 123-45-67";
+  const email = sanityData?.email || "pk@kre.dp.ua";
 
   const contactItems = [
-    { 
-      icon: MapPin, 
-      title: "Наша адреса", 
-      value: sanityData?.address || "м.Дніпро, вул. Степана Бандери, 18" 
-    },
-    { 
-      icon: Phone, 
-      title: "Телефон", 
-      value: sanityData?.phone || "+38 (067) 123-45-67" 
-    },
-    { 
-      icon: Mail, 
-      title: "Електронна пошта", 
-      value: sanityData?.email || "pk@kre.dp.ua" 
-    },
-    { 
-      icon: Clock, 
-      title: "Графік роботи", 
-      value: "Пн-Пт: 09:00 - 17:00" // Залишаємо статичним, якщо цього поля немає в Sanity
-    }
+    { icon: MapPin, title: "Наша адреса", value: address },
+    { icon: Phone, title: "Телефон", value: phone },
+    { icon: Mail, title: "Електронна пошта", value: email },
+    { icon: Clock, title: "Графік роботи", value: "Пн-Пт: 09:00 - 17:00" }
   ]
 
   return (
@@ -49,10 +39,10 @@ export default async function ContactsPage() {
           ))}
         </div>
 
-        {/* Карта з ПРЯМИМ посиланням, щоб уникнути 404 */}
+        {/* Карта */}
         <div className="w-full h-[500px] rounded-[3rem] overflow-hidden border-8 border-gray-50 relative">
-          <iframe 
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2644.4371720448!2d35.0218!3d48.4608!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40d938363715e219%3A0x6b77c596328c6e2b!2z0LLRg9C70LjRhtGPINCh0YLQtdC_0LDQvdCwINCR0LDQvdC00LXRgNC4LCAxOCwg0JTQvdGW0L_RgNC-LCDQlNC90ZbQv9GA0L7Qv9C10YLRgNC-0LLRgdGM0LrQsCDQvtCx0LvQsNGB0YLRjCwgNDkwMDA!5e0!3m2!1suk!2sua!4v1700000000000!5m2!1suk!2sua"
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2644.4371720448!2d35.0218!3d48.466!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDjCsDI3JzU3LjYiTiAzNcKwMDEnMTguNSJF!5e0!3m2!1suk!2sua!4v1620000000000!5m2!1suk!2sua"
             width="100%" height="100%" style={{ border: 0 }} allowFullScreen loading="lazy"
           ></iframe>
         </div>
