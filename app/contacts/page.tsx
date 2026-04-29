@@ -1,12 +1,35 @@
 import PageHeader from '../../components/PageHeader'
 import { MapPin, Phone, Mail, Clock } from 'lucide-react'
+import { client } from '../../sanity/lib/client'
 
-export default function ContactsPage() {
+// Вказуємо Next.js оновлювати кеш сторінки кожні 60 секунд
+export const revalidate = 60;
+
+export default async function ContactsPage() {
+  // Отримуємо дані з Sanity (документ типу "contacts")
+  const sanityData = await client.fetch(`*[_type == "contacts"][0]`);
+
   const contactItems = [
-    { icon: MapPin, title: "Наша адреса", value: "м.Дніпро, вул. Степана Бандери, 18" },
-    { icon: Phone, title: "Телефон", value: "+38 (067) 123-45-67" },
-    { icon: Mail, title: "Електронна пошта", value: "pk@kre.dp.ua" },
-    { icon: Clock, title: "Графік роботи", value: "Пн-Пт: 09:00 - 17:00" }
+    { 
+      icon: MapPin, 
+      title: "Наша адреса", 
+      value: sanityData?.address || "м.Дніпро, вул. Степана Бандери, 18" 
+    },
+    { 
+      icon: Phone, 
+      title: "Телефон", 
+      value: sanityData?.phone || "+38 (067) 123-45-67" 
+    },
+    { 
+      icon: Mail, 
+      title: "Електронна пошта", 
+      value: sanityData?.email || "pk@kre.dp.ua" 
+    },
+    { 
+      icon: Clock, 
+      title: "Графік роботи", 
+      value: "Пн-Пт: 09:00 - 17:00" // Залишаємо статичним, якщо цього поля немає в Sanity
+    }
   ]
 
   return (
