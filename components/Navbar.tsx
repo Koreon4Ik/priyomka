@@ -12,6 +12,7 @@ const navItems = [
   { name: "Освітні програми", href: "/specialties" },
   { name: "Вступнику", href: "/admission" },
   { name: "Документи", href: "/documents" },
+  { name: "Команда", href: "/team" }, // <-- Додано новий пункт меню
   { name: "Контакти", href: "/contacts" },
 ];
 
