@@ -22,7 +22,7 @@ export default async function TeamPage() {
     <main className="min-h-screen bg-white pb-20 relative z-10">
       <PageHeader 
         title="Наша команда" 
-        subtitle="Люди, які створюють майбутнє нашого коледжу" 
+        subtitle="Ваші надійні помічники на кожному етапі — від подачі заяви до зарахування" 
       />
       
       <div className="max-w-7xl mx-auto px-6">
