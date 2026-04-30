@@ -7,7 +7,7 @@ import vstup from './vstup'
 import team from './team'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
-  types: [contacts, specialty, docsPage, reviews, vstup],
+  types: [contacts, specialty, docsPage, reviews, vstup, team],
 }
 
 
