@@ -99,7 +99,7 @@ export default function HomePage() {
 
           <p className="max-w-2xl mx-auto text-xl text-gray-500 mb-16 font-medium leading-relaxed">
             Приєднуйся до лідерів цифрової трансформації. <br />
-            Твоя кар'єра в IT та інженерії починається в ДФКР.
+            Твоя кар'єра в IT та інженерії починається в ДФКР
           </p>
 
           <div className="flex flex-col sm:flex-row justify-center gap-6">
