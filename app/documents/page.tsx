@@ -1,3 +1,6 @@
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 import { client } from '@/sanity/lib/client'
 import PageHeader from '../../components/PageHeader'
 import { FileText, Download, Eye, FolderOpen } from 'lucide-react'
@@ -14,9 +17,9 @@ async function getDocumentsPage() {
       }
     }
   }`
-  return await client.fetch(query)
+  // Додано відключення кешу для цього запиту
+  return await client.fetch(query, {}, { next: { revalidate: 0 } })
 }
-
 
 export default async function DocumentsPage() {
   const data = await getDocumentsPage()
