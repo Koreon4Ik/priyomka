@@ -84,8 +84,8 @@ export default function Footer() {
             © 2026 ДФКР Вступ. Всі права захищені.
           </p>
           <div className="flex gap-6 text-xs text-gray-400">
-            <Link href="#" className="hover:text-blue-600">Політика конфіденційності</Link>
-            <Link href="#" className="hover:text-blue-600">Розробка сайту</Link>
+            {/* <Link href="#" className="hover:text-blue-600">Політика конфіденційності</Link>
+            <Link href="#" className="hover:text-blue-600">Розробка сайту</Link> */}
           </div>
         </div>
       </div>
