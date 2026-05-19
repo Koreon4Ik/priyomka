@@ -104,7 +104,7 @@ export default function HomePage() {
 
           <div className="flex flex-col sm:flex-row justify-center gap-6">
             <Link href="/specialties" className="px-12 py-6 bg-blue-600 text-white rounded-[2rem] font-black text-xl hover:bg-gray-900 transition-all duration-500 shadow-2xl shadow-blue-200 active:scale-95">
-              Спеціальності
+              Освітні програми
             </Link>
             <Link href="/documents" className="px-12 py-6 bg-white text-gray-900 border-2 border-gray-100 rounded-[2rem] font-black text-xl hover:bg-gray-50 transition-all active:scale-95">
               Документи

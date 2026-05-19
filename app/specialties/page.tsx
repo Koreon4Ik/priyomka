@@ -27,7 +27,7 @@ export default async function SpecialtiesPage() {
       {/* Використовуємо новий універсальний заголовок */}
       <PageHeader 
         title="Освітні програми" 
-        subtitle="Оберіть свій шлях у майбутнє серед наших сучасних спеціальностей"
+        subtitle="Оберіть свій шлях у майбутнє серед наших сучасних освітніх програм"
       />
 
       <div className="max-w-7xl mx-auto px-6">
