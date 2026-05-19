@@ -53,33 +53,63 @@ export default defineType({
 
     /* --- НОВИЙ РОЗДІЛ: ПРАВА КОЛОНКА (ТЕРМІНИ) --- */
     defineField({
-      name: 'deadlinesSection',
-      title: 'Важливі терміни (Права колонка)',
-      type: 'array',
-      description: 'Важливі дати відображатимуться в правій частині сторінки. Достатньо заповнити в будь-якому одному кроці (наприклад, у першому).',
-      of: [
-        {
-          type: 'object',
-          name: 'deadlineItem',
-          title: 'Термін / Подія',
-          fields: [
-            defineField({ name: 'period', title: 'Дата або період', type: 'string', description: 'Наприклад: з 19 липня по 31 липня' }),
-            defineField({ name: 'text', title: 'Опис події', type: 'text', rows: 2, description: 'Наприклад: Реєстрація та подання заяв вступників' }),
-            defineField({ 
-              name: 'type', 
-              title: 'Тип картки для дизайну', 
-              type: 'string',
-              initialValue: 'default',
-              options: {
-                list: [
-                  { title: 'Стандартна (Сіро-біла)', value: 'default' },
-                  { title: 'Акцентована (Ніжно-синя)', value: 'accent' }
-                ]
-              }
-            }),
-          ]
-        }
+  name: 'deadlines9',
+  title: 'Важливі терміни (9 класів) — Права колонка',
+  type: 'array',
+  description: 'Достатньо заповнити в будь-якому одному кроці (наприклад, у першому).',
+  of: [
+    {
+      type: 'object',
+      name: 'deadlineItem9',
+      title: 'Термін / Подія (9 клас)',
+      fields: [
+        defineField({ name: 'period', title: 'Дата або період', type: 'string', description: 'Наприклад: з 01 по 14 липня' }),
+        defineField({ name: 'text', title: 'Опис події', type: 'text', rows: 2 }),
+        defineField({ 
+          name: 'type', 
+          title: 'Тип картки', 
+          type: 'string',
+          initialValue: 'default',
+          options: {
+            list: [
+              { title: 'Стандартна (Сіро-біла)', value: 'default' },
+              { title: 'Акцентована (Ніжно-синя)', value: 'accent' }
+            ]
+          }
+        }),
       ]
-    }),
+    }
+  ]
+}),
+
+defineField({
+  name: 'deadlines11',
+  title: 'Важливі терміни (11 класів) — Права колонка',
+  type: 'array',
+  description: 'Достатньо заповнити в будь-якому одному кроці (наприклад, у першому).',
+  of: [
+    {
+      type: 'object',
+      name: 'deadlineItem11',
+      title: 'Термін / Подія (11 клас)',
+      fields: [
+        defineField({ name: 'period', title: 'Дата або період', type: 'string', description: 'Наприклад: з 19 липня' }),
+        defineField({ name: 'text', title: 'Опис події', type: 'text', rows: 2 }),
+        defineField({ 
+          name: 'type', 
+          title: 'Тип картки', 
+          type: 'string',
+          initialValue: 'default',
+          options: {
+            list: [
+              { title: 'Стандартна (Сіро-біла)', value: 'default' },
+              { title: 'Акцентована (Ніжно-синя)', value: 'accent' }
+            ]
+          }
+        }),
+      ]
+    }
+  ]
+}),
   ],
 })
