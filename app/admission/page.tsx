@@ -2,27 +2,37 @@
 
 import { useState, useEffect } from 'react'
 import PageHeader from '../../components/PageHeader'
-import { CheckCircle2, X, Download, FileText } from 'lucide-react'
-import { client } from '@/sanity/lib/client' // Перевірте шлях до вашого клієнта Sanity
+import { ChevronDown, Download, FileText, Link2, Calendar } from 'lucide-react'
+import { client } from '@/sanity/lib/client'
 import { PortableText } from '@portabletext/react'
 
-// Тип даних для кроку вступу
+interface InlineLink {
+  label: string
+  url: string
+  isImportant?: boolean
+}
+
+interface DeadlineItem {
+  period: string
+  text: string
+  type: 'default' | 'accent'
+}
+
 interface AdmissionStep {
   _id: string
   number: string
   title: string
   content: any
   fileUrl?: string
+  linksSection?: InlineLink[]
+  deadlinesSection?: DeadlineItem[]
 }
-
-
 
 export default function AdmissionPage() {
   const [steps, setSteps] = useState<AdmissionStep[]>([])
-  const [selectedStep, setSelectedStep] = useState<AdmissionStep | null>(null)
+  const [expandedStepId, setExpandedStepId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
 
-  // Завантаження даних із Sanity
   useEffect(() => {
     const fetchSteps = async () => {
       const query = `*[_type == "vstup"] | order(number asc) {
@@ -30,7 +40,9 @@ export default function AdmissionPage() {
         number,
         title,
         content,
-        "fileUrl": file.asset->url
+        "fileUrl": file.asset->url,
+        linksSection,
+        deadlinesSection
       }`
       const data = await client.fetch(query)
       setSteps(data)
@@ -39,81 +51,148 @@ export default function AdmissionPage() {
     fetchSteps()
   }, [])
 
+  // Беремо посилання та терміни з першого доступного об'єкта, де вони заповнені
+  const sideLinks = steps.find(s => s.linksSection && s.linksSection.length > 0)?.linksSection || []
+  const sideDeadlines = steps.find(s => s.deadlinesSection && s.deadlinesSection.length > 0)?.deadlinesSection || []
+
+  const toggleStep = (id: string) => {
+    setExpandedStepId(expandedStepId === id ? null : id)
+  }
+
   return (
-    <main className="min-h-screen bg-gray-50/50 pb-20 relative z-10">
+    <main className="min-h-screen bg-white pb-20 relative z-10">
       <PageHeader 
         title="Вступнику" 
         subtitle="Все, що потрібно знати для успішного вступу до нашого коледжу"
       />
 
-      <div className="max-w-3xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto px-6">
         {loading ? (
-          <div className="text-center py-10">Завантаження...</div>
+          <div className="text-center py-20 font-bold text-gray-400">Завантаження даних...</div>
         ) : (
-          <div className="space-y-4">
-            {steps.map((step) => (
-              <button
-                key={step._id}
-                onClick={() => setSelectedStep(step)}
-                className="w-full flex items-center gap-5 p-6 bg-white border border-gray-100 rounded-3xl shadow-sm hover:shadow-md transition-all hover:scale-[1.01] group text-left"
-              >
-                <div className="flex-shrink-0 w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center font-black group-hover:bg-blue-700 transition-colors">
-                  {step.number}
+          /* ГОЛОВНА БЕНТО-СІТКА НА 3 КОЛОНКИ (1 : 2 : 1) */
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
+            
+            {/* ЛІВА КОЛОНКА: КОРИСНІ ПОСИЛАННЯ */}
+            <div className="lg:col-span-1 bg-gray-50/60 border border-gray-100 p-6 rounded-[2rem] space-y-4">
+              <div className="flex items-center gap-2 text-gray-900 font-black uppercase text-xs tracking-wider mb-2">
+                <Link2 size={16} className="text-blue-600" />
+                <span>Корисні ресурси</span>
+              </div>
+              {sideLinks.length === 0 ? (
+                <p className="text-xs text-gray-400 italic">Заповніть посилання в адмінці Sanity</p>
+              ) : (
+                <div className="flex flex-col gap-2">
+                  {sideLinks.map((link, idx) => (
+                    <a
+                      key={idx}
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`w-full p-4 rounded-2xl font-bold text-sm transition-all hover:translate-x-1 flex items-center justify-between group ${
+                        link.isImportant 
+                          ? 'bg-blue-600 text-white shadow-md shadow-blue-100 hover:bg-blue-700' 
+                          : 'bg-white text-gray-700 border border-gray-100 hover:border-blue-200'
+                      }`}
+                    >
+                      <span>{link.label}</span>
+                      <span className={`text-xs transition-transform group-hover:translate-x-0.5 ${link.isImportant ? 'text-blue-200' : 'text-gray-400'}`}>→</span>
+                    </a>
+                  ))}
                 </div>
-                <p className="text-lg font-bold text-gray-800">{step.title}</p>
-                <CheckCircle2 className="ml-auto text-blue-100 group-hover:text-blue-500 transition-colors" size={24} />
-              </button>
-            ))}
+              )}
+            </div>
+
+            {/* ЦЕНТРАЛЬНА КОЛОНКА: КРОКИ ВСТУПУ */}
+            <div className="lg:col-span-2 space-y-4">
+              {steps.map((step) => {
+                const isExpanded = expandedStepId === step._id
+                return (
+                  <div 
+                    key={step._id}
+                    className="bg-white border border-gray-100 rounded-[2rem] shadow-sm hover:shadow-md transition-all p-6"
+                  >
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="flex items-center gap-4">
+                        <div className="flex-shrink-0 w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center font-black">
+                          {step.number}
+                        </div>
+                        <h3 className="text-lg font-black text-gray-800 leading-tight">{step.title}</h3>
+                      </div>
+
+                      {/* Твоя синя кнопка замість старої галочки */}
+                      <button
+                        onClick={() => toggleStep(step._id)}
+                        className="flex-shrink-0 inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-black text-[11px] uppercase tracking-wider rounded-xl transition-all shadow-sm"
+                      >
+                        <span>Детальніше</span>
+                        <ChevronDown 
+                          size={14} 
+                          className={`transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} 
+                        />
+                      </button>
+                    </div>
+
+                    {/* Прихований контент, який плавно відкривається вниз */}
+                    {isExpanded && (
+                      <div className="mt-6 pt-6 border-t border-gray-100 space-y-6 animate-in slide-in-from-top-2 duration-200">
+                        <div className="prose prose-blue max-w-none text-gray-600 text-sm leading-relaxed">
+                          <PortableText value={step.content} />
+                        </div>
+
+                        {step.fileUrl && (
+                          <a 
+                            href={step.fileUrl} 
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-3 p-4 bg-gray-900 text-white rounded-2xl text-xs font-bold hover:bg-blue-600 transition-all shadow-lg"
+                          >
+                            <FileText size={16} />
+                            <span>Завантажити інструкцію (PDF)</span>
+                            <Download size={14} className="opacity-60" />
+                          </a>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+
+            {/* ПРАВА КОЛОНКА: ТЕРМІНИ ВСТУПУ */}
+            <div className="lg:col-span-1 bg-gray-50/60 border border-gray-100 p-6 rounded-[2rem] space-y-4">
+              <div className="flex items-center gap-2 text-gray-900 font-black uppercase text-xs tracking-wider mb-2">
+                <Calendar size={16} className="text-blue-600" />
+                <span>Важливі дати</span>
+              </div>
+              {sideDeadlines.length === 0 ? (
+                <p className="text-xs text-gray-400 italic">Заповніть терміни в адмінці Sanity</p>
+              ) : (
+                <div className="flex flex-col gap-3">
+                  {sideDeadlines.map((item, idx) => (
+                    <div
+                      key={idx}
+                      className={`p-5 rounded-2xl border transition-all ${
+                        item.type === 'accent'
+                          ? 'bg-blue-50/80 border-blue-100 text-blue-900'
+                          : 'bg-white border-gray-100 text-gray-800'
+                      }`}
+                    >
+                      <span className={`inline-block px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase mb-2 ${
+                        item.type === 'accent' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-500'
+                      }`}>
+                        {item.period}
+                      </span>
+                      <p className="text-xs font-bold leading-normal">{item.text}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
           </div>
         )}
       </div>
-
-      {/* МОДАЛЬНЕ ВІКНО (ПОПАП) */}
-      {selectedStep && (
-        <div 
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-200"
-          onClick={() => setSelectedStep(null)}
-        >
-          <div 
-            className="bg-white w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-[2.5rem] shadow-2xl relative animate-in zoom-in-95 duration-200"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Кнопка закриття */}
-            <button 
-              onClick={() => setSelectedStep(null)}
-              className="absolute top-6 right-6 p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors"
-            >
-              <X size={20} className="text-gray-600" />
-            </button>
-
-            <div className="p-8 md:p-12">
-              <div className="inline-block px-4 py-1 bg-blue-50 text-blue-600 rounded-full text-sm font-bold mb-4">
-                Крок {selectedStep.number}
-              </div>
-              <h2 className="text-3xl font-black text-gray-900 mb-6 leading-tight">
-                {selectedStep.title}
-              </h2>
-              
-              <div className="prose prose-blue max-w-none text-gray-600 mb-8">
-                <PortableText value={selectedStep.content} />
-              </div>
-
-              {selectedStep.fileUrl && (
-                <a 
-                  href={selectedStep.fileUrl} 
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-3 p-4 bg-blue-600 text-white rounded-2xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 w-fit"
-                >
-                  <FileText size={20} />
-                  <span>Завантажити інструкцію (PDF)</span>
-                  <Download size={18} className="ml-2 opacity-70" />
-                </a>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
     </main>
   )
 }
