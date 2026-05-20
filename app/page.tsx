@@ -3,11 +3,23 @@
 import * as Icons from 'lucide-react';
 import Link from 'next/link';
 import { motion, useSpring, useMotionValue, useTransform } from 'framer-motion';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react'; // Додано useState
+import { client } from '@/sanity/lib/client'; // Імпорт клієнта Sanity
+
+interface HomeCardData {
+  _id: string
+  title: string
+  description: string
+  iconType: 'clock' | 'phone' | 'map' | 'mail'
+  badgeColor: 'blue' | 'purple' | 'dark'
+}
 
 export default function HomePage() {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
+
+  // Стан для нових карток інформації
+  const [infoCards, setInfoCards] = useState<HomeCardData[]>([]);
 
   // Налаштування плавності для різних рівнів глибини
   const sX1 = useSpring(mouseX, { stiffness: 30, damping: 20 });
@@ -35,8 +47,43 @@ export default function HomePage() {
       mouseY.set(e.clientY);
     };
     window.addEventListener('mousemove', handleMove);
+    
+    // Завантаження карток інфо з Sanity
+    const fetchInfoCards = async () => {
+      const query = `*[_type == "homeCard"] {
+        _id,
+        title,
+        description,
+        iconType,
+        badgeColor
+      }`;
+      const data = await client.fetch(query);
+      setInfoCards(data);
+    };
+    fetchInfoCards();
+
     return () => window.removeEventListener('mousemove', handleMove);
   }, [mouseX, mouseY]);
+
+  // Допоміжна функція підбору іконки для нових карток
+  const renderInfoIcon = (type: string) => {
+    switch (type) {
+      case 'clock': return <Icons.Clock size={40} />
+      case 'phone': return <Icons.Phone size={40} />
+      case 'map': return <Icons.MapPin size={40} />
+      case 'mail': return <Icons.Mail size={40} />
+      default: return <Icons.Clock size={40} />
+    }
+  };
+
+  // Допоміжна функція градієнтів для нових карток
+  const getInfoBgGradient = (color: string) => {
+    switch (color) {
+      case 'purple': return 'from-purple-500 to-indigo-600 shadow-purple-200'
+      case 'dark': return 'from-gray-700 to-gray-900 shadow-gray-200'
+      default: return 'from-blue-500 to-blue-600 shadow-blue-200'
+    }
+  };
 
   return (
     <main className="min-h-screen bg-white overflow-hidden relative selection:bg-blue-100">
@@ -135,6 +182,29 @@ export default function HomePage() {
           ))}
         </div>
       </section>
+
+      {/* --- НОВА СЕКЦІЯ: ІНФОРМАЦІЙНІ КАРТКИ З SANITY --- */}
+      {infoCards.length > 0 && (
+        <section className="pb-32 relative z-20">
+          <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12">
+            {infoCards.map((card) => (
+              <motion.div
+                key={card._id}
+                whileHover={{ y: -20, rotateX: 5, rotateY: 5 }}
+                className="group p-10 bg-white/70 backdrop-blur-xl rounded-[3.5rem] border border-white shadow-xl hover:shadow-blue-100/50 transition-all cursor-default flex flex-col justify-between min-h-[340px]"
+              >
+                <div>
+                  <div className={`w-20 h-20 bg-gradient-to-br text-white rounded-[2rem] flex items-center justify-center mb-10 shadow-lg group-hover:rotate-[10deg] transition-transform ${getInfoBgGradient(card.badgeColor)}`}>
+                    {renderInfoIcon(card.iconType)}
+                  </div>
+                  <h3 className="text-3xl font-black text-gray-900 mb-4">{card.title}</h3>
+                </div>
+                <p className="text-gray-500 font-medium leading-relaxed whitespace-pre-line">{card.description}</p>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+      )}
 
     </main>
   );
